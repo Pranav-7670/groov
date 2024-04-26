@@ -1,32 +1,21 @@
-pipeline{
-    agent any 
-    
-
-    stages{
-         
-        stage('equal stage')
-        { 
-          when {
-                  branch 'main'
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo "build stage perfomred"
             }
-    
-         steps{
-                echo "i am from main branch"
-                              
-              }       
-            
         }
-       stage('not stage')
-        { 
-         when {
-                 branch 'dev'
+        stage('Test') {
+            steps {
+                echo "test stage perfomred"
             }
-
-         steps{
-                echo "i am in branch dev"            
-              }       
-            
-        }     
-
-          }
-}          
+        }
+        stage('Deploy') {
+            when { tag "release-*" }
+            steps {
+                echo 'Deploying only because this commit is tagged...'
+                sh 'make deploy'
+            }
+        }
+    }
